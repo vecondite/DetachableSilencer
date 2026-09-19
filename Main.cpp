@@ -10,16 +10,22 @@ using namespace plugin;
 
 struct Main
 {
-    bool silencer = 0;
-    unsigned int key = VK_TAB;
+    bool silencer;
+    unsigned int key;
 
     mINI::INIFile file{ PLUGIN_PATH("config.ini") };
     mINI::INIStructure ini;
 
-    std::string cheatCode = "PSD";
+    std::string cheatCode;
 
     void updateConfigs() {
         static char msg[1024];
+        if (!file.read(ini)) {
+            ini["settings"]["key"] = "192";
+            ini["settings"]["cheat"] = "DSP";
+            ini["saved"]["silencer"] = "1";
+            file.generate(ini);
+        }
         try {
             file.read(ini);
             key = std::stoul(ini["settings"]["key"], nullptr, 0);
