@@ -19,6 +19,7 @@ CREDITS:
 - Me (vecondite): The mod itself.
 - metayeti: [INI Library](https://github.com/metayeti/mINI).
 - Gemini: Minor bug fixes.
+- Ezgif: Converting the preview video into .gif
 
 Need Help?
 ---
