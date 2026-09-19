@@ -13,13 +13,13 @@ silencer: a field that is used to save whether the player has a silencer or not.
 
 CREDITS:
 ---
-Distributed as FOSS under the MIT license.
-Me (vecondite): The mod itself.
-metayeti: [INI Library](https://github.com/metayeti/mINI).
-Gemini: Minor bug fixes.
+> Distributed as FOSS under the MIT license.
+- Me (vecondite): The mod itself.
+- metayeti: [INI Library](https://github.com/metayeti/mINI).
+- Gemini: Minor bug fixes.
 
 Need Help?
 ---
-@vecondite on Discord
-vecondite on libertycity
-vecondite on github
+- @vecondite on Discord
+- vecondite on libertycity
+- vecondite on github
