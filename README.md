@@ -1,5 +1,7 @@
 # DetachableSilencer
 A GTA:SA mod that allows you to turn the silenced pistol into a normal pistol and vice-versa.
+![Uploading ezgif-6c8d8a5daeb9caa0.gif…]()
+
 ---
 Installation
 ---
