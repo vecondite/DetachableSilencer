@@ -9,16 +9,16 @@ Drop the modloader folder to the root folder of GTA:SA.
 
 config.ini
 ---
-- keybind: the keybind to attach/detach the silencer.
-- cheatcode: the cheatcode that can be used to refresh the configuration. (old cheatcode has to be used to refresh!)
-- boneid: the bone id that the silencer model is attached to.
-- x,y & z offsets: the offsets of the silencer model from the fingers.
-- ifp: IFP file of the switch animation.
-- anim: Anim name of the switch animation.
-- animDuration: Duration of the anim. (After how long the silencer model is deleted)
-- animSpot: When the silencer model is attached to the gun.
-- silencerModel: The model id of the silencer model.
-- silencer: a field that is used to save whether the player has a silencer or not.
+- **keybind:** the keybind to attach/detach the silencer.
+- **cheatcode:** the cheatcode that can be used to refresh the configuration. (old cheatcode has to be used to refresh!)
+- **boneid:** the bone id that the silencer model is attached to.
+- **x,y & z offsets:** the offsets of the silencer model from the fingers.
+- **ifp:** IFP file of the switch animation.
+- **anim:** Anim name of the switch animation.
+- **animDuration:** Duration of the anim. (After how long the silencer model is deleted)
+- **animSpot:** When the silencer model is attached to the gun.
+- **silencerModel:** The model id of the silencer model.
+- **silencer:** a field that is used to save whether the player has a silencer or not.
 
 COMMON VIRTUAL KEY CODES (Decimal)
 ---
