@@ -1,11 +1,12 @@
 #include <plugin.h> // Plugin-SDK version 1005 from 2026-08-14 08:10:00
-#include <CMessages.h>
 #include <mini/ini.h>
 #include <CHud.h>
 #include <CStreaming.h>
 #include <extensions/ScriptCommands.h>
 #include <CWorld.h>
 #include <CCheat.h>
+#define INJECTOR_USE_VARIADIC_TEMPLATES
+#include <Injector.h>
 
 using namespace plugin;
 
@@ -57,17 +58,17 @@ void readConfig() {
         file.generate(ini);
 
         sprintf_s(msg, "Config ~r~not found!~w~~n~~n~"
-                        "~b~Default config~w~ with values:~n~~n~"
-                        "Keybind: ~b~%d~w~~n~"
-                        "Cheat code: ~b~%s~w~~n~"
-                        "BoneID: ~b~%d~w~~n~"
-                        "xyzOffset: ~b~%f %f %f~w~~n~"
-                        "ifp: ~b~%s~w~~n~"
-                        "anim: ~b~%s~w~~n~"
-                        "AD: ~b~%d~w~~n~"
-                        "AS: ~b~%d~w~~n~"
-                        "M: ~b~%d~w~~n~"
-                        "Silencer: ~b~%d~w~",
+            "~b~Default config~w~ with values:~n~~n~"
+            "Keybind: ~b~%d~w~~n~"
+            "Cheat code: ~b~%s~w~~n~"
+            "BoneID: ~b~%d~w~~n~"
+            "xyzOffset: ~b~%f %f %f~w~~n~"
+            "ifp: ~b~%s~w~~n~"
+            "anim: ~b~%s~w~~n~"
+            "AD: ~b~%d~w~~n~"
+            "AS: ~b~%d~w~~n~"
+            "M: ~b~%d~w~~n~"
+            "Silencer: ~b~%d~w~",
             keyBind, cheatCode.c_str(), boneId, xOffset, yOffset, zOffset, ifpName.c_str(), animName.c_str(), animDuration, animSpot, silencerModel, silencer);
         CHud::SetHelpMessage(msg, true, false, false);
     }
@@ -87,30 +88,31 @@ void readConfig() {
         silencer = std::stoi(ini["saves"]["silencer"]);
 
         sprintf_s(msg, "Config ~g~found~w~:~n~~n~"
-                       "Keybind: ~b~%d~w~~n~"
-                       "Cheat code: ~b~%s~w~~n~"
-                       "BoneID: ~b~%d~w~~n~"
-                       "xyzOffset: ~b~%f %f %f~w~~n~"
-                       "IFP: ~b~%s~w~~n~"
-                       "Anim: ~b~%s~w~~n~"
-                       "AD: ~b~%d~w~~n~"
-                       "AS: ~b~%d~w~~n~"
-                       "M: ~b~%d~w~~n~"
-                       "Silencer: ~b~%d~w~",
+            "Keybind: ~b~%d~w~~n~"
+            "Cheat code: ~b~%s~w~~n~"
+            "BoneID: ~b~%d~w~~n~"
+            "xyzOffset: ~b~%f %f %f~w~~n~"
+            "IFP: ~b~%s~w~~n~"
+            "Anim: ~b~%s~w~~n~"
+            "AD: ~b~%d~w~~n~"
+            "AS: ~b~%d~w~~n~"
+            "M: ~b~%d~w~~n~"
+            "Silencer: ~b~%d~w~",
             keyBind, cheatCode.c_str(), boneId, xOffset, yOffset, zOffset, ifpName.c_str(), animName.c_str(), animDuration, animSpot, silencerModel, silencer);
         CHud::SetHelpMessage(msg, true, false, false);
-    } catch (const std::exception& e) {
+    }
+    catch (const std::exception& e) {
         sprintf_s(msg, "~r~ERR!~w~~n~~n~"
-                       "Keybind: ~b~%d~w~~n~"
-                       "Cheat code: ~b~%s~w~~n~"
-                       "BoneID: ~b~%d~w~~n~"
-                       "xyzOffset: ~b~%f %f %f~w~~n~"
-                       "ifp: ~b~%s~w~~n~"
-                       "anim: ~b~%s~w~~n~"
-                       "AD: ~b~%d~w~~n~"
-                       "AS: ~b~%d~w~~n~"
-                       "M: ~b~%d~w~~n~"
-                       "Silencer: ~b~%d~w~",
+            "Keybind: ~b~%d~w~~n~"
+            "Cheat code: ~b~%s~w~~n~"
+            "BoneID: ~b~%d~w~~n~"
+            "xyzOffset: ~b~%f %f %f~w~~n~"
+            "ifp: ~b~%s~w~~n~"
+            "anim: ~b~%s~w~~n~"
+            "AD: ~b~%d~w~~n~"
+            "AS: ~b~%d~w~~n~"
+            "M: ~b~%d~w~~n~"
+            "Silencer: ~b~%d~w~",
             keyBind, cheatCode.c_str(), boneId, xOffset, yOffset, zOffset, ifpName.c_str(), animName.c_str(), animDuration, animSpot, silencerModel, silencer);
         CHud::SetHelpMessage(msg, true, false, false);
     }
@@ -124,7 +126,11 @@ struct Main
     Main()
     {
         // register event callbacks
-        Events::gameProcessEvent += []{ gInstance.OnGameProcess(); };
+        Events::gameProcessEvent += [] { gInstance.OnGameProcess(); };
+        linkInjector::save_manager::on_save([](int slot) {
+            ini["saves"]["silencer"] = std::to_string(silencer);
+            file.write(ini);
+        });
         readConfig();
     }
 
@@ -139,11 +145,6 @@ struct Main
     CObject* silencerObject = nullptr;
     bool silencerState = false;
 
-    void updateSave() {
-        ini["saves"]["silencer"] = std::to_string(silencer);
-        file.write(ini);
-    }
-
     bool isPistol(eWeaponType weapType) {
         return weapType == WEAPONTYPE_PISTOL || weapType == WEAPONTYPE_PISTOL_SILENCED;
     }
@@ -156,6 +157,20 @@ struct Main
     {
         CPlayerPed* player = FindPlayerPed();
         if (!player) return;
+
+        bool alive = player->IsAlive();
+        if (!alive && wasAlive) {
+            hasSavedAmmo = false;
+            lastWeapType = WEAPONTYPE_UNARMED;
+            lastWeapAmmo = 0;
+            lastWeapClip = 0;
+            silencer = 0;
+
+            animTime = 0;
+            animEnd = 0;
+            silencerState = false;
+        }
+        wasAlive = alive;
 
         if (!plugin::Command<0x04EE>(ifpName.c_str())) {
             plugin::Command<0x04ED>(ifpName.c_str());
@@ -172,42 +187,38 @@ struct Main
         eWeaponType currentWeapType = currentWeapon.m_eWeaponType;
         unsigned int currentWeapAmmo = currentWeaponRef.m_nAmmoTotal;
 
-        if (isPistol(currentWeapType)) {
-            if (lastWeapType != currentWeapType) {
-                if (currentWeapType == WEAPONTYPE_PISTOL_SILENCED) {
-                    silencer = 1;
-                    updateSave();
-                }
-                if (currentWeapAmmo < lastWeapAmmo) {
-                    currentWeaponRef.m_nAmmoTotal = lastWeapAmmo + currentWeapAmmo;
-                    currentWeaponRef.m_nAmmoInClip = lastWeapClip;
-                } else if(hasSavedAmmo) {
-                    currentWeaponRef.m_nAmmoTotal = lastWeapAmmo;
-                    currentWeaponRef.m_nAmmoInClip = lastWeapClip;
-                }
-            } else {
-                lastWeapAmmo = currentWeapAmmo;
-                lastWeapClip = currentWeaponRef.m_nAmmoInClip;
-                hasSavedAmmo = true;
-            }
-        }
-        lastWeapType = currentWeapType;
+        if (alive) {
+            if (isPistol(currentWeapType)) {
+                if (lastWeapType != currentWeapType) {
+                    if (currentWeapType == WEAPONTYPE_PISTOL_SILENCED) {
+                        silencer = 1;
+                    }
+                    if (isPistol(lastWeapType) && currentWeapAmmo == lastWeapAmmo && hasSavedAmmo) {
+                        currentWeaponRef.m_nAmmoTotal = lastWeapAmmo + currentWeapAmmo;
+                        currentWeaponRef.m_nAmmoInClip = lastWeapClip;
+                    }
+                    if (currentWeapAmmo < lastWeapAmmo && hasSavedAmmo) {
+                        currentWeaponRef.m_nAmmoTotal = lastWeapAmmo + currentWeapAmmo;
+                        currentWeaponRef.m_nAmmoInClip = lastWeapClip;
+                    }
 
-        bool alive = player->IsAlive();
-        if (!alive && wasAlive) {
-            hasSavedAmmo = false;
-            lastWeapType = WEAPONTYPE_UNARMED;
-            lastWeapAmmo = 0;
-            lastWeapClip = 0;
-            silencer = 0;
-            updateSave();
+                    lastWeapAmmo = currentWeaponRef.m_nAmmoTotal;
+                    lastWeapClip = currentWeaponRef.m_nAmmoInClip;
+                    hasSavedAmmo = true;
+                }
+                else {
+                    lastWeapAmmo = currentWeapAmmo;
+                    lastWeapClip = currentWeaponRef.m_nAmmoInClip;
+                    hasSavedAmmo = true;
+                }
+            }
+            lastWeapType = currentWeapType;
         }
-        wasAlive = alive;
 
         unsigned int currentTime = CTimer::m_snTimeInMilliseconds;
         bool giveWeapon = animTime != 0 && animTime < currentTime;
         bool pressed = KeyPressed(keyBind);
-        if (((pressed && !wasKeyPressed && animTime == 0) || giveWeapon) && isPistol(currentWeapType) && silencer) {
+        if (alive && ((pressed && !wasKeyPressed && animTime == 0) || giveWeapon) && isPistol(currentWeapType) && silencer) {
             if (silencerObject == nullptr) {
                 if (!CStreaming::HasModelLoaded(silencerModel)) {
                     CStreaming::RequestModel(silencerModel, false);
@@ -228,14 +239,16 @@ struct Main
                 lastWeapClip = currentWeapon.m_nAmmoInClip;
 
                 player->GiveWeapon(nextWeap, lastWeapAmmo, false);
+                player->m_aWeapons[player->GetWeaponSlot(nextWeap)].m_nAmmoTotal = lastWeapAmmo;
                 player->m_aWeapons[player->GetWeaponSlot(nextWeap)].m_nAmmoInClip = lastWeapClip;
 
                 CWeapon givenWeapon = player->m_aWeapons[player->GetWeaponSlot(nextWeap)];
 
                 animTime = 0;
-                
+
                 silencerState = givenWeapon.m_eWeaponType == WEAPONTYPE_PISTOL_SILENCED ? false : true;
-            } else {
+            }
+            else {
                 plugin::Command<COMMAND_TASK_PLAY_ANIM_SECONDARY>(player, animName.c_str(), ifpName.c_str(), 4.0f, 0, 0, 0, 0, 0, -1);
                 animTime = currentTime + animSpot;
                 animEnd = animTime + animDuration;
@@ -245,7 +258,7 @@ struct Main
         }
         wasKeyPressed = pressed;
 
-        if (animEnd!= 0 && animEnd < currentTime) {
+        if (animEnd != 0 && animEnd < currentTime) {
             silencerState = false;
         }
 
@@ -271,6 +284,12 @@ struct Main
                 delete silencerObject;
                 silencerObject = nullptr;
             }
+        }
+
+        if (!isPistol(player->m_aWeapons[player->GetWeaponSlot(WEAPONTYPE_PISTOL)].m_eWeaponType) && hasSavedAmmo) {
+            lastWeapAmmo = 0;
+            lastWeapClip = 0;
+            hasSavedAmmo = false;
         }
     }
 } gInstance;
