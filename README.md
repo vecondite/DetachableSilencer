@@ -73,7 +73,8 @@ CREDITS:
 > Distributed as FOSS under the MIT license.
 - Me (vecondite): The mod itself.
 - metayeti: [INI Library](https://github.com/metayeti/mINI).
-- Dryxio: [Animation Editor](https://gtastuff.com/tools/ifp-editor)
+- Dryxio: [Animation Editor](https://gtastuff.com/tools/ifp-editor).
+- LINK2012: Injector (hooking) library.
 - Gemini: Minor bug fixes, Virtual key map above.
 - Ezgif: Converting the preview video into .gif
 
