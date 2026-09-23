@@ -75,11 +75,12 @@ COMMON VIRTUAL KEY CODES (Decimal)
 CREDITS:
 ---
 > Distributed as FOSS under the MIT license.
-- Me (vecondite): The mod itself.
+- Me (vecondite): The mod itself and the animation.
 - metayeti: [INI Library](https://github.com/metayeti/mINI).
 - Dryxio: [Animation Editor](https://gtastuff.com/tools/ifp-editor).
 - LINK2012: Injector (hooking) library.
-- black.greyed_61525: Alternative animation
+- black.greyed_61525: Alternative animation.
+- Rockstar Games: Default weapon models.
 - Gemini: Minor bug fixes, Virtual key map above.
 - Ezgif: Converting the preview video into .gif
 - Silenced pistol model creator of Immersive Weapons Pack by pedrowav
