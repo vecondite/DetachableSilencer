@@ -130,7 +130,7 @@ struct Main
         linkInjector::save_manager::on_save([](int slot) {
             ini["saves"]["silencer"] = std::to_string(silencer);
             file.write(ini);
-        });
+            });
         readConfig();
     }
 
@@ -152,6 +152,8 @@ struct Main
     unsigned int animDuration = 1500;
     unsigned int animTime = 0;
     unsigned int animEnd = 0;
+    
+    bool wasModSwap = false;
 
     void OnGameProcess()
     {
@@ -193,9 +195,13 @@ struct Main
                     if (currentWeapType == WEAPONTYPE_PISTOL_SILENCED) {
                         silencer = 1;
                     }
-                    if (isPistol(lastWeapType) && currentWeapAmmo == lastWeapAmmo && hasSavedAmmo) {
-                        currentWeaponRef.m_nAmmoTotal = lastWeapAmmo + currentWeapAmmo;
-                        currentWeaponRef.m_nAmmoInClip = lastWeapClip;
+                    if (wasModSwap) {
+                        wasModSwap = false;
+                    } else {
+                        if (isPistol(lastWeapType) && currentWeapAmmo == lastWeapAmmo && hasSavedAmmo) {
+                            currentWeaponRef.m_nAmmoTotal = lastWeapAmmo + currentWeapAmmo;
+                            currentWeaponRef.m_nAmmoInClip = lastWeapClip;
+                        }
                     }
                     if (currentWeapAmmo < lastWeapAmmo && hasSavedAmmo) {
                         currentWeaponRef.m_nAmmoTotal = lastWeapAmmo + currentWeapAmmo;
@@ -241,6 +247,8 @@ struct Main
                 player->GiveWeapon(nextWeap, lastWeapAmmo, false);
                 player->m_aWeapons[player->GetWeaponSlot(nextWeap)].m_nAmmoTotal = lastWeapAmmo;
                 player->m_aWeapons[player->GetWeaponSlot(nextWeap)].m_nAmmoInClip = lastWeapClip;
+
+                wasModSwap = true;
 
                 CWeapon givenWeapon = player->m_aWeapons[player->GetWeaponSlot(nextWeap)];
 
