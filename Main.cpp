@@ -130,7 +130,7 @@ struct Main
         linkInjector::save_manager::on_save([](int slot) {
             ini["saves"]["silencer"] = std::to_string(silencer);
             file.write(ini);
-            });
+        });
         readConfig();
     }
 
@@ -152,7 +152,7 @@ struct Main
     unsigned int animDuration = 1500;
     unsigned int animTime = 0;
     unsigned int animEnd = 0;
-    
+
     bool wasModSwap = false;
 
     void OnGameProcess()
@@ -197,7 +197,8 @@ struct Main
                     }
                     if (wasModSwap) {
                         wasModSwap = false;
-                    } else {
+                    }
+                    else {
                         if (isPistol(lastWeapType) && currentWeapAmmo == lastWeapAmmo && hasSavedAmmo) {
                             currentWeaponRef.m_nAmmoTotal = lastWeapAmmo + currentWeapAmmo;
                             currentWeaponRef.m_nAmmoInClip = lastWeapClip;
@@ -278,10 +279,10 @@ struct Main
                     unsigned int boneIndex = RpHAnimIDGetIndex(animHierarchy, boneId);
                     RwMatrix* boneMatrix = &RpHAnimHierarchyGetMatrixArray(animHierarchy)[boneIndex];
                     CMatrix* silencerMatrix = silencerObject->m_matrix;
-                    silencerMatrix->at = boneMatrix->right;
+                    silencerMatrix->at = (CVector(-boneMatrix->right.x, -boneMatrix->right.y, -boneMatrix->right.z));
                     silencerMatrix->pos = boneMatrix->pos + (boneMatrix->right * xOffset) + (boneMatrix->up * yOffset) + (boneMatrix->at * zOffset);
                     silencerMatrix->up = boneMatrix->up;
-                    silencerMatrix->right = (CVector(-boneMatrix->at.x, -boneMatrix->at.y, -boneMatrix->at.z));
+                    silencerMatrix->right = boneMatrix->at;
                     silencerObject->UpdateRwMatrix();
                     silencerObject->UpdateRwFrame();
                 };
