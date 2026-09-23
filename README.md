@@ -79,8 +79,11 @@ CREDITS:
 - metayeti: [INI Library](https://github.com/metayeti/mINI).
 - Dryxio: [Animation Editor](https://gtastuff.com/tools/ifp-editor).
 - LINK2012: Injector (hooking) library.
+- black.greyed_61525: Alternative animation
 - Gemini: Minor bug fixes, Virtual key map above.
 - Ezgif: Converting the preview video into .gif
+- Silenced pistol model creator of Immersive Weapons Pack by pedrowav
+- All credits go to the respective creators of the elements packaged with the mod, explicitly mentioned here or not. Issues? contact me as below.
 
 Need Help?
 ---
